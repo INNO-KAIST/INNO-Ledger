@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>INNO Ledger — 측정 계획·이력</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='bg' cx='0.5' cy='0.42' r='0.72'><stop offset='0' stop-color='%23103833'/><stop offset='1' stop-color='%23070F0D'/></radialGradient><linearGradient id='sh' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%236CF2C0'/><stop offset='1' stop-color='%2312D3A6'/></linearGradient><radialGradient id='co' cx='0.44' cy='0.4' r='0.62'><stop offset='0' stop-color='%23ffffff'/><stop offset='0.4' stop-color='%2386FFD9'/><stop offset='1' stop-color='%232FF0B0'/></radialGradient></defs><rect width='100' height='100' rx='24' fill='url(%23bg)'/><circle cx='50' cy='50' r='31' fill='none' stroke='%2322EEB6' stroke-opacity='0.55' stroke-width='2'/><circle cx='50' cy='50' r='27' fill='url(%23sh)'/><circle cx='50' cy='50' r='13' fill='url(%23co)'/></svg>">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Cdefs%3E%3ClinearGradient id=%22iled%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%2323505c%22/%3E%3Cstop offset=%22.62%22 stop-color=%22%2316323a%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%2264%22 height=%2264%22 rx=%2215%22 fill=%22url%28%23iled%29%22/%3E%3Crect x=%22.75%22 y=%22.75%22 width=%2262.5%22 height=%2262.5%22 rx=%2214.3%22 fill=%22none%22 stroke=%22%23fff%22 stroke-opacity=%22.10%22 stroke-width=%221.5%22/%3E%3Crect x=%2215%22 y=%2215%22 width=%2210%22 height=%2210%22 rx=%222.6%22 fill=%22%239fcad3%22 opacity=%221%22/%3E%3Crect x=%2227%22 y=%2215%22 width=%2210%22 height=%2210%22 rx=%222.6%22 fill=%22%239fcad3%22 opacity=%221%22/%3E%3Crect x=%2239%22 y=%2215%22 width=%2210%22 height=%2210%22 rx=%222.6%22 fill=%22%239fcad3%22 opacity=%220.4%22/%3E%3Crect x=%2215%22 y=%2227%22 width=%2210%22 height=%2210%22 rx=%222.6%22 fill=%22%239fcad3%22 opacity=%221%22/%3E%3Crect x=%2227%22 y=%2227%22 width=%2210%22 height=%2210%22 rx=%222.6%22 fill=%22%239fcad3%22 opacity=%220.4%22/%3E%3Crect x=%2240.1%22 y=%2228.1%22 width=%227.8%22 height=%227.8%22 rx=%222%22 fill=%22none%22 stroke=%22%239fcad3%22 stroke-width=%222.2%22 opacity=%22.55%22/%3E%3Crect x=%2215%22 y=%2239%22 width=%2210%22 height=%2210%22 rx=%222.6%22 fill=%22%239fcad3%22 opacity=%220.4%22/%3E%3Crect x=%2227%22 y=%2239%22 width=%2210%22 height=%2210%22 rx=%222.6%22 fill=%22%23F4F6F1%22/%3E%3Crect x=%2240.1%22 y=%2240.1%22 width=%227.8%22 height=%227.8%22 rx=%222%22 fill=%22none%22 stroke=%22%239fcad3%22 stroke-width=%222.2%22 opacity=%22.55%22/%3E%3C/svg%3E">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#16323a">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
@@ -32,7 +32,7 @@ a{color:var(--primary);text-decoration:none}
 #app{max-width:1560px;margin:0 auto;padding:0 18px 60px;display:none}
 #app.on{display:block}
 .topbar{display:flex;align-items:center;gap:14px;padding:14px 2px 10px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);z-index:20;border-bottom:1px solid var(--line)}
-.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto}
 .brand .logo{font-size:20px;font-weight:800;letter-spacing:-.2px}
 .brand .logo b{color:var(--primary)}
 .brand .tag{font-size:11.5px;color:var(--muted);padding-top:2px}
@@ -354,6 +354,8 @@ table.matrix tbody tr:hover th.rowhead,table.matrix tbody tr:hover td{background
   .tabs .spacer{flex:0 0 8px}
   .card{padding:16px 14px}
 }
+
+.brand-mark{display:block;flex:none;width:30px;height:30px;border-radius:8px}
 </style>
 </head>
 <body>
@@ -361,7 +363,7 @@ table.matrix tbody tr:hover th.rowhead,table.matrix tbody tr:hover td{background
 <!-- ============ 로그인 게이트 ============ -->
 <div id="loginGate">
   <div class="gatecard">
-    <div class="orb"><svg viewBox="0 0 100 100" width="56" height="56"><defs><radialGradient id="bg2" cx="0.5" cy="0.42" r="0.72"><stop offset="0" stop-color="#103833"/><stop offset="1" stop-color="#070F0D"/></radialGradient><linearGradient id="sh2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6CF2C0"/><stop offset="1" stop-color="#12D3A6"/></linearGradient><radialGradient id="co2" cx="0.44" cy="0.4" r="0.62"><stop offset="0" stop-color="#ffffff"/><stop offset="0.4" stop-color="#86FFD9"/><stop offset="1" stop-color="#2FF0B0"/></radialGradient></defs><rect width="100" height="100" rx="24" fill="url(#bg2)"/><circle cx="50" cy="50" r="31" fill="none" stroke="#22EEB6" stroke-opacity="0.55" stroke-width="2"/><circle cx="50" cy="50" r="27" fill="url(#sh2)"/><circle cx="50" cy="50" r="13" fill="url(#co2)"/></svg></div>
+    <div class="orb"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="56" height="56"><defs><linearGradient id="lgorb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#23505c"/><stop offset=".62" stop-color="#16323a"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lgorb)"/><rect x=".75" y=".75" width="62.5" height="62.5" rx="14.3" fill="none" stroke="#fff" stroke-opacity=".10" stroke-width="1.5"/><rect x="15" y="15" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="1"/><rect x="27" y="15" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="1"/><rect x="39" y="15" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="0.4"/><rect x="15" y="27" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="1"/><rect x="27" y="27" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="0.4"/><rect x="40.1" y="28.1" width="7.8" height="7.8" rx="2" fill="none" stroke="#9fcad3" stroke-width="2.2" opacity=".55"/><rect x="15" y="39" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="0.4"/><rect x="27" y="39" width="10" height="10" rx="2.6" fill="#F4F6F1"/><rect x="40.1" y="40.1" width="7.8" height="7.8" rx="2" fill="none" stroke="#9fcad3" stroke-width="2.2" opacity=".55"/></svg></div>
     <h1>INNO <b>Ledger</b></h1>
     <p>측정 계획·커버리지·보정 게이트.<br>INNO NanoLab과 같은 계정으로 로그인하면<br>합성 기록(lot)을 그대로 불러옵니다.</p>
     <button class="gbtn" id="btnGoogleLogin">
@@ -376,7 +378,7 @@ table.matrix tbody tr:hover th.rowhead,table.matrix tbody tr:hover td{background
 <div id="app">
   <div class="topbar">
     <div class="brand">
-      <span class="logo">INNO <b>Ledger</b></span>
+      <svg class="brand-mark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="26" height="26"><defs><linearGradient id="lgmk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#23505c"/><stop offset=".62" stop-color="#16323a"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lgmk)"/><rect x=".75" y=".75" width="62.5" height="62.5" rx="14.3" fill="none" stroke="#fff" stroke-opacity=".10" stroke-width="1.5"/><rect x="15" y="15" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="1"/><rect x="27" y="15" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="1"/><rect x="39" y="15" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="0.4"/><rect x="15" y="27" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="1"/><rect x="27" y="27" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="0.4"/><rect x="40.1" y="28.1" width="7.8" height="7.8" rx="2" fill="none" stroke="#9fcad3" stroke-width="2.2" opacity=".55"/><rect x="15" y="39" width="10" height="10" rx="2.6" fill="#9fcad3" opacity="0.4"/><rect x="27" y="39" width="10" height="10" rx="2.6" fill="#F4F6F1"/><rect x="40.1" y="40.1" width="7.8" height="7.8" rx="2" fill="none" stroke="#9fcad3" stroke-width="2.2" opacity=".55"/></svg><span class="logo">INNO <b>Ledger</b></span>
       <span class="tag">측정 계획 · 이력 · 보정 게이트 — Phase 6</span>
     </div>
     <div class="gauge" title="첨부된 대표 파일 합계 — Firestore 프로젝트 inno-nanoil 공유 용량(NanoLab과 합산)의 일부">
