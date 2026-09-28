@@ -366,6 +366,31 @@ table.grid th{text-transform:none}
 
 .brand-mark{display:block;flex:none;width:30px;height:30px;border-radius:8px}
 
+/* rd3-ledger — 셀 서랍 · Run 단계 · 사후 연결 */
+#cellOverlay.drawer{justify-content:flex-end;align-items:stretch;padding:0;background:rgba(10,20,20,.22);backdrop-filter:none}
+#cellOverlay.drawer .modalcard{max-width:560px;width:min(560px,100%);max-height:none;height:100%;border-radius:14px 0 0 14px;border-right:0;animation:rdDrawer .18s ease-out}
+@keyframes rdDrawer{from{transform:translateX(24px);opacity:.6}to{transform:none;opacity:1}}
+@media (max-width:720px){#cellOverlay.drawer .modalcard{border-radius:0;width:100%;max-width:none;padding:16px 14px calc(80px + env(safe-area-inset-bottom))}}
+@media (prefers-reduced-motion:reduce){#cellOverlay.drawer .modalcard{animation:none}}
+.runcard{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:10px;background:var(--card)}
+.runcard .runrow{padding-top:6px;flex-wrap:wrap}
+.runcard .runfileline,.runcard .prismline{border-bottom:0}
+.runsteps{display:flex;align-items:center;flex-wrap:wrap;gap:4px 0;font-size:11.5px;color:var(--muted)}
+.runsteps .rs{display:flex;align-items:center;gap:5px}
+.runsteps .rs+.rs::before{content:"";width:16px;height:1.5px;background:var(--line);margin:0 6px}
+.runsteps .rs i{font-style:normal;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:700;border:1.5px solid var(--line)}
+.runsteps .rs.ok{color:var(--sub)}
+.runsteps .rs.ok i{background:var(--green-soft);border-color:transparent;color:var(--ok,#047857)}
+.runsteps .rs.now{color:var(--ink,var(--text));font-weight:600}
+.runsteps .rs.now i{border-color:var(--accent);color:var(--accent)}
+.runsteps .rsnext{margin-left:auto;font-weight:600;color:var(--accent)}
+.runsteps .rsnext.done{color:var(--sub)}
+.latelink{display:flex;flex-direction:column;gap:6px;padding:8px 10px;margin:6px 0;border-radius:8px;background:var(--warn-soft,var(--amber-soft));font-size:12px}
+.latelink .llrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.latelink .llk{font-weight:700;min-width:44px}
+.latelink select{flex:1 1 200px;min-width:0;font-size:12px;padding:4px 6px}
+.latelink .btn{padding:2px 10px;font-size:11.5px}
+
 /* ════════ INNO suite UX layer — 공통 CSS (2026-09-29) ════════ */
 /* 앱 전환 버튼·메뉴 (크롬 위) */
 .inno-apps{position:relative;display:inline-flex}
@@ -449,10 +474,10 @@ table.grid th{text-transform:none}
   <div class="tabs">
     <button class="tab-btn on" data-tab="matrix">매트릭스</button>
     <button class="tab-btn" data-tab="templates">계획 템플릿</button>
-    <button class="tab-btn" data-tab="presets">프리셋</button>
     <button class="tab-btn" data-tab="calib">보정</button>
-    <button class="tab-btn" data-tab="dashboard">대시보드</button>
+    <button class="tab-btn" data-tab="dashboard">검토</button>
     <span class="spacer"></span>
+    <button class="tab-btn" data-tab="presets">프리셋</button>
     <button class="tab-btn" data-tab="settings">설정</button>
   </div>
 
@@ -606,7 +631,7 @@ table.grid th{text-transform:none}
 </div>
 
 <!-- ---- 셀 편집 팝오버 ---- -->
-<div class="overlay" id="cellOverlay">
+<div class="overlay drawer" id="cellOverlay">
   <div class="modalcard" id="cellModal"></div>
 </div>
 
@@ -1716,6 +1741,10 @@ const Sync = (() => {
   async function updateRunScanRegion(runId, region) {
     await col("opt_runs").doc(runId).set({ scanRegion: region }, { merge: true });
   }
+  /* ③ 발급 뒤 보정·마운트 사후 연결 — 필요한 필드만 merge. 자동판정은 호출측에서 다시 계산해 넘긴다. */
+  async function lateLinkRun(runId, patch) {
+    await col("opt_runs").doc(runId).set(patch, { merge: true });
+  }
   async function setRunContext(runId, contextRuns) {
     await col("opt_runs").doc(runId).set({ contextRuns }, { merge: true });
   }
@@ -1864,7 +1893,7 @@ function innoWorkspaceIndex(state) {
     startMount, endMount, saveCalib, deleteCalib, issueRun, cancelRun, saveSettings,
     linkRunFile, unlinkRunFile, attachRunBlob, detachRunBlob,
     importPrismResult, setRunVerdict, retroRegisterRuns,
-    updateRunStage, updateRunScanRegion, setRunContext,
+    updateRunStage, updateRunScanRegion, setRunContext, lateLinkRun,
   };
 })();
 
@@ -2293,6 +2322,80 @@ function openCalibEditor(existing) {
 function closeOverlay(id) { $("#" + id).classList.remove("on"); }
 function openOverlay(id) { $("#" + id).classList.add("on"); }
 
+/* ---- ③ Run 단계 표시 ---- */
+function runStepsHtml(r) {
+  const v = r.verdict && r.verdict.state;
+  const steps = [
+    ["발급", true],
+    ["파일", !!r.file],
+    ["Prism", !!r.prism],
+    ["판정", !!v],
+  ];
+  const next = !r.file ? "측정 파일 연결" : !r.prism ? "Prism 결과 가져오기" : !v ? "채택·참고·폐기 판정" : "";
+  return `<div class="runsteps" aria-label="진행 단계">${steps.map(([l, ok], i) => `<span class="rs ${ok ? "ok" : ""}${!ok && steps.slice(0, i).every(x => x[1]) ? " now" : ""}"><i>${ok ? "✓" : i + 1}</i>${l}</span>`).join("")}
+    ${next ? `<span class="rsnext">다음: ${next}</span>` : `<span class="rsnext done">${v === "adopted" ? "채택(대표)" : v === "discarded" ? "폐기" : "참고"}</span>`}</div>`;
+}
+/* ---- ③ 발급 뒤 보정·마운트 사후 연결 ----
+ * 유효성은 측정(발급) 시각 기준: 발급 전에 확보됐고 그때 유효기한 안이면 linked,
+ * 발급 시점에 이미 만료였으면 expired, 발급 뒤에 확보된 보정이면 guessed(측정 당시 보정이 아님). */
+function calibStatusAt(c, t) {
+  if (!c) return "none";
+  if (c.at && t && c.at > t) return "guessed";
+  if (c.validUntil && t && c.validUntil < t) return "expired";
+  return "linked";
+}
+const LATE_CALIB_NOTE = { linked: "측정 시점 유효", expired: "측정 시점에 만료", guessed: "측정 뒤 확보" };
+function lateLinkHtml(r, exId) {
+  const needCalib = !r.calibStatus || r.calibStatus === "none" || r.calibStatus === "expired" || r.calibStatus === "guessed";
+  const needMount = !r.mountId;
+  if (!needCalib && !needMount) return "";
+  const t = r.issuedAt || 0;
+  const calibs = needCalib ? matchingCalibs(exId).slice().sort((a, b) => {
+    const ra = calibStatusAt(a, t) === "linked" ? 0 : 1, rb = calibStatusAt(b, t) === "linked" ? 0 : 1;
+    return ra - rb || Math.abs((a.at || 0) - t) - Math.abs((b.at || 0) - t);
+  }) : [];
+  const mounts = needMount ? state.mounts.slice().sort((a, b) => {
+    const ca = (a.startedAt || 0) <= t && (!a.endedAt || a.endedAt >= t) ? 0 : 1, cb = (b.startedAt || 0) <= t && (!b.endedAt || b.endedAt >= t) ? 0 : 1;
+    return ca - cb || Math.abs((a.startedAt || 0) - t) - Math.abs((b.startedAt || 0) - t);
+  }) : [];
+  const parts = [];
+  if (needCalib) parts.push(calibs.length
+    ? `<span class="llk">보정</span><select data-llcalib="${esc(r.id)}">${calibs.map(c => { const st = calibStatusAt(c, t);
+        return `<option value="${esc(c.id)}">${fmtDate(c.at)} · ${esc((c.lens && c.lens.model) || "렌즈 미기재")} — ${LATE_CALIB_NOTE[st]}</option>`; }).join("")}</select>
+       <button class="btn" data-llcalibgo="${esc(r.id)}">보정 연결</button>`
+    : `<span class="llk">보정</span><span class="muted">이 여기구성(λ)에 맞는 보정 세션이 없습니다</span>`);
+  if (needMount) parts.push(mounts.length
+    ? `<span class="llk">마운트</span><select data-llmount="${esc(r.id)}">${mounts.map(m => { const cov = (m.startedAt || 0) <= t && (!m.endedAt || m.endedAt >= t);
+        return `<option value="${esc(m.id)}">${esc(m.specimen || "(이름없음)")} · ${fmtDateTime(m.startedAt)}${cov ? " — 측정 시각 포함" : ""}</option>`; }).join("")}</select>
+       <button class="btn" data-llmountgo="${esc(r.id)}">마운트 연결</button>`
+    : `<span class="llk">마운트</span><span class="muted">기록된 마운트가 없습니다</span>`);
+  return `<div class="latelink">${parts.map(x => `<div class="llrow">${x}</div>`).join("")}</div>`;
+}
+function bindLateLink(modal, cid, args) {
+  const reopen = () => openCellModal(...args);
+  $$("[data-llcalibgo]", modal).forEach(b => b.onclick = async () => {
+    const r = state.runs[b.dataset.llcalibgo]; if (!r) return;
+    const sel = modal.querySelector(`[data-llcalib="${CSS.escape(r.id)}"]`);
+    const c = sel && state.calibs.find(x => x.id === sel.value); if (!c) return;
+    const st = calibStatusAt(c, r.issuedAt || 0);
+    if (st !== "linked" && !confirm(`이 보정은 ${LATE_CALIB_NOTE[st]}입니다. Run 은 '${st === "expired" ? "보정 만료" : "보정 추정"}'으로 기록되고 자동판정의 보정 항목은 통과로 세지 않습니다. 연결할까요?`)) return;
+    const patch = { calibId: c.id, calibStatus: st, calibLinkedLate: { at: Date.now(), by: (state.fb.user && state.fb.user.email) || "" } };
+    if (r.prism) patch.autoGate = computeAutoGate(r.prism, st);
+    try { await Sync.lateLinkRun(r.id, patch); toast("보정을 연결했습니다" + (r.prism ? " · 자동판정 재계산" : "")); reopen(); }
+    catch (e) { toast("연결 실패: " + (e.message || e), 4000); }
+  });
+  $$("[data-llmountgo]", modal).forEach(b => b.onclick = async () => {
+    const r = state.runs[b.dataset.llmountgo]; if (!r) return;
+    const sel = modal.querySelector(`[data-llmount="${CSS.escape(r.id)}"]`);
+    const m = sel && state.mounts.find(x => x.id === sel.value); if (!m) return;
+    const t = r.issuedAt || 0, cov = (m.startedAt || 0) <= t && (!m.endedAt || m.endedAt >= t);
+    if (!cov && !confirm("이 마운트 기간에 측정 시각이 들어 있지 않습니다. 그래도 연결할까요?")) return;
+    try { await Sync.lateLinkRun(r.id, { mountId: m.id, specimen: m.specimen || "", mountLinkedLate: { at: Date.now(), by: (state.fb.user && state.fb.user.email) || "" } });
+      toast("마운트를 연결했습니다"); reopen(); }
+    catch (e) { toast("연결 실패: " + (e.message || e), 4000); }
+  });
+}
+
 function openCellModal(lotId, measId, exId, emId) {
   const cid = cellId(lotId, measId, exId, emId);
   const cell = state.cells[cid];
@@ -2331,10 +2434,11 @@ function openCellModal(lotId, measId, exId, emId) {
         </select></div>` : ""}
       <div class="rowbar" style="margin-top:6px"><span class="spacer"></span><button class="btn sm primary" id="rtIssue">Run 티켓 발급</button></div>
       ${cellRuns.length ? `<div style="margin-top:10px">
-        ${cellRuns.map(r => `<div class="runrow">
+        ${cellRuns.map(r => `<div class="runcard">${runStepsHtml(r)}<div class="runrow">
           <span class="mono">${esc(r.id.slice(0, 8))}</span>
           <span class="badge ${r.calibStatus === "linked" ? "core" : (r.calibStatus === "expired" || r.calibStatus === "guessed") ? "shell" : "other"}"${r.calibStatus === "guessed" ? ' title="소급 등록 시 λ·시각으로 추정해 연결한 보정입니다 — h5의 calib_id로 확정된 것이 아니므로 자동판정의 \'보정 세션 링크\' 항목은 통과로 세지 않습니다"' : ""}>${esc(({ guessed: "보정 추정", linked: "보정 연결", expired: "보정 만료", none: "보정 없음" })[r.calibStatus || "none"] || r.calibStatus)}</span>
           ${r.retro ? `<span class="badge other" title="소급 등록 마법사로 등록됨">소급</span>` : ""}
+          ${r.calibLinkedLate ? `<span class="badge other" title="발급 뒤 ${esc(fmtDateTime(r.calibLinkedLate.at))}에 연결">사후 연결</span>` : ""}
           <span>${fmtDateTime(r.issuedAt)}</span>
           <span class="spacer"></span>
           <button class="btn sm" data-copyrun="${esc(r.id)}" style="padding:2px 8px">복사</button>
@@ -2345,8 +2449,9 @@ function openCellModal(lotId, measId, exId, emId) {
             r.file.attached ? `📎 ${esc(r.file.name)} <span class="muted">(${fmtBytes(r.file.blobBytes)} 압축 · 클라우드 첨부됨)</span> ${fileIntegrityHtml(r)} <button class="btn" data-detachfile="${esc(r.id)}">첨부 해제</button> <button class="btn danger" data-unlinkfile="${esc(r.id)}">연결 해제</button>` :
             `📎 ${esc(r.file.name)} <span class="muted">(${fmtBytes(r.file.bytes)} · 로컬 링크)</span> ${fileIntegrityHtml(r)} <button class="btn" data-attachfile="${esc(r.id)}">클라우드에 첨부</button> <button class="btn danger" data-unlinkfile="${esc(r.id)}">연결 해제</button>`}
         </div>
+        ${lateLinkHtml(r, exId)}
         <div class="prismline">${prismBlockHtml(r)}</div>
-        ${spotLineHtml(r)}`).join("")}
+        ${spotLineHtml(r)}</div>`).join("")}
       </div>` : `<div class="hint" style="margin-top:8px">아직 발급된 Run이 없습니다.</div>`}
     </div>`;
   }
@@ -2427,6 +2532,7 @@ function openCellModal(lotId, measId, exId, emId) {
         openCellModal(lotId, measId, exId, emId);
       } catch (e) { toast("취소 실패: " + (e.message || e), 4000); }
     });
+    bindLateLink(modal, cid, [lotId, measId, exId, emId]);
     /* PHASE 4: 파일 연결/첨부/해제 */
     $$("[data-linkfile]", modal).forEach(b => b.onclick = () => {
       const r = state.runs[b.dataset.linkfile];
@@ -3133,8 +3239,8 @@ function renderDashboard() {
     <div class="dashgrid">
       <div class="dashcard"><div class="dashnum">${pendingCells.length}</div><div class="lbl">판정대기 셀</div><div class="hint">Prism 결과는 들어왔지만 아직 채택/참고/폐기를 정하지 않은 셀</div></div>
       <div class="dashcard"><div class="dashnum" style="color:var(--risk)">${retryCells.length}</div><div class="lbl">재측정필요 셀</div><div class="hint">대표 Run이 폐기되어 다시 측정이 필요한 셀</div></div>
-      <div class="dashcard"><div class="dashnum" style="color:var(--warn)">${noCalibRuns.length}</div><div class="lbl">보정없음 Run</div><div class="hint">보정 세션이 연결되지 않은 채 발급·등록된 Run — 되살릴 수 없을 수 있음</div></div>
-      <div class="dashcard"><div class="dashnum" style="color:var(--warn)">${noMountRuns.length}</div><div class="lbl">마운트 미지정 Run</div><div class="hint">활성 마운트 없이 발급되었거나 소급 등록된 Run — Spot 매칭에서 제외됨</div></div>
+      <div class="dashcard"><div class="dashnum" style="color:var(--warn)">${noCalibRuns.length}</div><div class="lbl">보정없음 Run</div><div class="hint">보정 세션 없이 발급·등록된 Run — 행을 눌러 셀에서 '보정 연결'로 사후 연결</div></div>
+      <div class="dashcard"><div class="dashnum" style="color:var(--warn)">${noMountRuns.length}</div><div class="lbl">마운트 미지정 Run</div><div class="hint">마운트 없이 발급·소급 등록된 Run(Spot 매칭 제외) — 행을 눌러 '마운트 연결'</div></div>
     </div>
     <div class="card" style="margin-top:14px">
       <h3>측정종류별 현황</h3>
