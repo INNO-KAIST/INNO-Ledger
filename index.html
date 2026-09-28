@@ -6,33 +6,18 @@
 <title>INNO Ledger — 측정 계획·이력</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='bg' cx='0.5' cy='0.42' r='0.72'><stop offset='0' stop-color='%23103833'/><stop offset='1' stop-color='%23070F0D'/></radialGradient><linearGradient id='sh' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%236CF2C0'/><stop offset='1' stop-color='%2312D3A6'/></linearGradient><radialGradient id='co' cx='0.44' cy='0.4' r='0.62'><stop offset='0' stop-color='%23ffffff'/><stop offset='0.4' stop-color='%2386FFD9'/><stop offset='1' stop-color='%232FF0B0'/></radialGradient></defs><rect width='100' height='100' rx='24' fill='url(%23bg)'/><circle cx='50' cy='50' r='31' fill='none' stroke='%2322EEB6' stroke-opacity='0.55' stroke-width='2'/><circle cx='50' cy='50' r='27' fill='url(%23sh)'/><circle cx='50' cy='50' r='13' fill='url(%23co)'/></svg>">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#16323a">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <script>/* theme boot (FOUC 방지: 첫 페인트 전 적용) */
 (function(){try{var t=localStorage.getItem("ledger_theme");
 if(t!=="light"&&t!=="dark"){t=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";}
 document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","light");}})();</script>
 <style>
 /* ============ INNO Ledger — 측정 계획·이력 (design tokens: INNO NanoLab과 공유) ============ */
-:root{
-  --bg:#F8FAFC; --card:#FFFFFF; --line:#E2E8F0; --line2:#CBD5E1;
-  --ink:#0F172A; --ink2:#334155; --sub:#475569; --muted:#64748B;
-  --primary:#0D9488; --primary-strong:#0F766E; --primary-soft:#CCFBF1;
-  --ok:#059669; --ok-soft:#DCFCE7; --warn:#D97706; --warn-soft:#FEF3C7;
-  --risk:#DC2626; --risk-soft:#FEE2E2; --chip:#F1F5F9;
-  --amber-soft:#FEF9C3; --green-soft:#DCFCE7; --blue-soft:#DBEAFE; --orange-soft:#FFEDD5;
-  --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 12px rgba(15,23,42,.05);
-  --r:12px; --r-s:8px;
-}
-html[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:#0B1220; --card:#111A2E; --line:#1E293B; --line2:#334155;
-  --ink:#E5EAF2; --ink2:#CBD5E1; --sub:#94A3B8; --muted:#8497AE;
-  --primary:#2DD4BF; --primary-strong:#14B8A6; --primary-soft:#0F2E2A;
-  --ok:#10B981; --ok-soft:#0F3227; --warn:#F59E0B; --warn-soft:#3A2A12;
-  --risk:#F87171; --risk-soft:#3B1A1A; --chip:#1B2540;
-  --amber-soft:#3A320F; --green-soft:#0F3227; --blue-soft:#17274A; --orange-soft:#3A230F;
-  --shadow:0 1px 2px rgba(0,0,0,.45),0 6px 16px rgba(0,0,0,.35);
-  --field:#0E1728; --hover:#182238; --rowhover:#152036;
-}
+/* INNO suite tokens — 공통 틀 + Ledger 강조색(petrol teal). 옛 변수명은 아래 별칭으로 유지 */
+:root{color-scheme:light;--page:#f5f6f3;--surface:#ffffff;--surface-2:#eef1ed;--surface-3:#e6eae5;--ink:#243433;--ink-2:#4a5a56;--muted:#62706b;--faint:#8b978f;--border:#dde3dc;--border-strong:#c9d3c8;--grid:#e4e8e2;--ok:#2a7141;--ok-soft:#e3f0e5;--warn:#8a5f0a;--warn-soft:#f7ecd3;--risk:#ab3f35;--risk-soft:#f6e1dd;--info:#2f5f9e;--info-soft:#e2eaf5;--scrim:rgba(20,32,30,.42);--shadow:0 1px 2px rgba(24,40,37,.05),0 6px 20px rgba(24,40,37,.06);--shadow-lg:0 24px 70px rgba(24,40,37,.18);--accent:#1d5f6e;--accent-strong:#164b57;--accent-soft:#e3eef0;--focus:#4d8e9e;--chrome:#16323a;--chrome-mark:#9fcad3;--on-accent:#ffffff;--toast-bg:#16323a;--toast-ink:#f1f4ef;--chrome-ink:#f1f4ef;--chrome-ink-2:rgba(241,244,239,.72);--chrome-line:rgba(255,255,255,.09);--chrome-soft:rgba(255,255,255,.08);--chrome-soft-2:rgba(255,255,255,.14);--font:"DM Sans","Noto Sans KR",system-ui,-apple-system,"Segoe UI","Malgun Gothic","Apple SD Gothic Neo",sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,"D2Coding",monospace;}
+html[data-theme="dark"]{color-scheme:dark;--page:#1b2422;--surface:#232f2c;--surface-2:#2b3733;--surface-3:#33403b;--ink:#e3ebe2;--ink-2:#c3cfc5;--muted:#a3b0a6;--faint:#7f8c84;--border:#3a4841;--border-strong:#4d5d54;--grid:#33403b;--ok:#6cc68a;--ok-soft:#1f3a2a;--warn:#e3b04f;--warn-soft:#3a3018;--risk:#e8847a;--risk-soft:#3d2320;--info:#8fb3e6;--info-soft:#1f2d44;--scrim:rgba(5,12,10,.60);--shadow:0 1px 2px rgba(0,0,0,.30),0 8px 24px rgba(0,0,0,.28);--shadow-lg:0 24px 70px rgba(0,0,0,.50);--accent:#7fbccb;--accent-strong:#9dcdd9;--accent-soft:#1f3b42;--focus:#8cc6d4;--chrome:#122a30;--chrome-mark:#9fcad3;--on-accent:#122a30;--toast-bg:#e3ebe2;--toast-ink:#122a30;--chrome-ink:#f1f4ef;--chrome-ink-2:rgba(241,244,239,.72);--chrome-line:rgba(255,255,255,.09);--chrome-soft:rgba(255,255,255,.08);--chrome-soft-2:rgba(255,255,255,.14);}
+:root{--bg:var(--page);--card:var(--surface);--line:var(--border);--line2:var(--border-strong);--ink2:var(--ink-2);--sub:var(--ink-2);--primary:var(--accent);--primary-strong:var(--accent-strong);--primary-soft:var(--accent-soft);--chip:var(--surface-2);--amber-soft:var(--warn-soft);--green-soft:var(--ok-soft);--blue-soft:var(--info-soft);--orange-soft:var(--warn-soft);--field:var(--surface);--hover:var(--surface-2);--rowhover:var(--surface-2);--good:var(--ok);--r:10px;--r-s:7px}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","Malgun Gothic","Apple SD Gothic Neo",sans-serif;-webkit-font-smoothing:antialiased}
@@ -238,6 +223,137 @@ td.cellslot:hover .cellspark{opacity:1}
 .wizev th{color:var(--muted);font-weight:700}
 .wizevwrap{overflow-x:auto}
 .guessed{color:var(--good);font-weight:700}
+
+/* ════════ INNO suite skin — Workspace 결 (2026-09-29) ════════
+   공통 틀(바탕·글자·선·크롬·폰트)은 RefAtlas 와 같고, 강조색만 Ledger 고유(petrol teal).
+   아래 규칙은 기존 규칙을 덮어쓴다 — 레이아웃·기능은 그대로. */
+body{background:var(--page);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.55;font-synthesis:none}
+.mono,.formula,code{font-family:var(--mono)}
+::selection{background:color-mix(in srgb,var(--accent) 22%,transparent)}
+:where(button,a,input,select,textarea,summary,[tabindex]):focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ── 상단 크롬: 짙은 petrol 띠 (전체 폭) ── */
+.topbar{background:var(--chrome);color:var(--chrome-ink);border-bottom:1px solid var(--chrome-line);
+  box-shadow:0 0 0 100vmax var(--chrome);clip-path:inset(0 -100vmax);padding:12px 2px;min-height:60px}
+.brand .logo{color:var(--chrome-ink);font-weight:700;font-size:18px;letter-spacing:.01em}
+.brand .logo b{color:var(--chrome-mark);font-weight:700}
+.brand .tag{color:var(--chrome-ink-2);font-size:11px;letter-spacing:.04em}
+.topbar .chip{background:var(--chrome-soft);color:var(--chrome-ink);border:1px solid var(--chrome-line);font-weight:500}
+.topbar button.chip{cursor:pointer}
+.topbar button.chip:hover{background:var(--chrome-soft-2)}
+.topbar .chip.dot::before{background:var(--chrome-ink-2)}
+.topbar .chip.dot.on::before{background:#7fd49a}
+.topbar .chip.dot.err::before{background:#f08a7e}
+.topbar .chip.dot.busy::before{background:#f0c060}
+.topbar .iconbtn{background:transparent;border-color:var(--chrome-line);color:var(--chrome-ink)}
+.topbar .iconbtn:hover{background:var(--chrome-soft-2)}
+.gaugetxt{color:var(--chrome-ink-2)}
+.gaugebar{background:var(--chrome-soft-2)}
+.gaugebar i{background:var(--chrome-mark)}
+
+/* ── 탭: 크롬 띠의 두 번째 줄 (RefAtlas 상단 탭과 같은 결) ── */
+.topbar{border-bottom:0;padding-bottom:6px}
+.tabs{gap:2px;padding:0 0 0;background:var(--chrome);box-shadow:0 0 0 100vmax var(--chrome);clip-path:inset(0 -100vmax);border-bottom:0}
+.tabs button{position:relative;color:var(--chrome-ink-2);font-weight:500;font-size:13.5px;padding:9px 14px 12px;border-radius:7px 7px 0 0;border-bottom:0;transition:color .15s,background .15s}
+.tabs button:hover:not(.on){color:var(--chrome-ink);background:var(--chrome-soft)}
+.tabs button.on{color:var(--chrome-ink);font-weight:600;background:var(--chrome-soft)}
+.tabs button.on::after{content:"";position:absolute;left:14px;right:14px;bottom:3px;height:2px;border-radius:2px;background:var(--chrome-mark)}
+.panel{padding-top:20px}
+
+/* ── 카드·표 ── */
+.card{border-radius:10px;border-color:var(--border);box-shadow:var(--shadow);padding:18px 20px}
+.card+.card{margin-top:16px}
+.card h3,.modalcard h3{font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+.card .hint,.hint{color:var(--muted)}
+table.grid th{color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.06em}
+.dashtable th,.wizev th{color:var(--muted);font-weight:600}
+table.grid td{border-bottom-color:var(--grid)}
+table.grid tr:hover td{background:var(--surface-2)}
+.empty{padding:36px 12px}
+.empty b{font-weight:600}
+
+/* ── 버튼: 높이·위계 정리 (클릭 영역 ≥32px) ── */
+.btn{min-height:34px;border-radius:7px;border-color:var(--border-strong);font-weight:600;transition:background .15s,border-color .15s,color .15s}
+.btn:hover:not(:disabled){background:var(--surface-2);border-color:var(--border-strong)}
+.btn.sm{min-height:30px;padding:4px 11px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover:not(:disabled){background:var(--accent-strong);border-color:var(--accent-strong)}
+.btn.danger{color:var(--risk);border-color:color-mix(in srgb,var(--risk) 35%,transparent);background:transparent}
+.btn.danger:hover:not(:disabled){background:var(--risk-soft)}
+.btn:disabled{opacity:.45}
+.iconbtn{border-radius:7px;width:34px;height:34px}
+.addcolbtn{border-radius:7px;min-height:30px}
+.addcolbtn:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ── 입력 ── */
+input[type=text],input[type=number],input[type=date],input[type=search],select,textarea{border-color:var(--border-strong);background:var(--surface);border-radius:7px;min-height:34px}
+.field label{color:var(--ink-2);font-weight:600;font-size:11.5px}
+
+/* ── 배지·셀 상태: 두 테마 모두 토큰으로 (다크에서 파랑 글자가 묻히던 문제 수정) ── */
+.badge{font-weight:600;padding:2px 9px}
+.badge.core,.cellbadge.planned{background:var(--info-soft);color:var(--info)}
+.badge.shell,.badge.warn,.cellbadge.pending{background:var(--warn-soft);color:var(--warn)}
+.badge.pass,.cellbadge.success{background:var(--ok-soft);color:var(--ok)}
+.badge.fail,.cellbadge.retry{background:var(--risk-soft);color:var(--risk)}
+.badge.other,.cellbadge.ticket{background:var(--surface-2);color:var(--ink-2)}
+.cellbadge{border-radius:6px;font-weight:600}
+.cellbadge.none{color:var(--faint);border-color:var(--border-strong)}
+.guessed{color:var(--ok)}
+
+/* ── 측정종류 칩 ── */
+.measchip{border-color:var(--border);color:var(--ink-2);font-weight:500;padding:6px 13px;min-height:32px}
+.measchip:hover{border-color:var(--border-strong);color:var(--ink)}
+.measchip.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+.measchip .n{background:color-mix(in srgb,currentColor 14%,transparent);font-weight:600}
+.measchip.on .n{background:color-mix(in srgb,var(--on-accent) 22%,transparent)}
+
+/* ── 매트릭스 ── */
+.matrixscroll{border-color:var(--border);border-radius:8px}
+table.matrix thead th{background:var(--surface-2);color:var(--muted);font-weight:600;letter-spacing:.02em}
+table.matrix thead th.corner,table.matrix tbody th.rowhead{background:var(--surface)}
+table.matrix thead th.corner{background:var(--surface-2)}
+table.matrix td,table.matrix tbody th.rowhead{border-bottom-color:var(--grid)}
+table.matrix tbody tr:hover th.rowhead,table.matrix tbody tr:hover td{background:var(--surface-2)}
+
+/* ── 대시보드 ── */
+.dashcard{border-radius:10px;border-color:var(--border);box-shadow:var(--shadow);padding:16px 18px}
+.dashcard .dashnum{font-weight:700;letter-spacing:-.02em}
+.dashcard .lbl{font-weight:600}
+.dashrow:hover{color:var(--accent)}
+
+/* ── 보조 카드·폼 ── */
+.rtcard,.presetform{background:var(--surface-2);border-color:var(--border);border-radius:8px}
+.tpl-card,.wizgroup{border-color:var(--border);border-radius:8px}
+
+/* ── 모달·토스트 ── */
+.overlay{background:var(--scrim);backdrop-filter:blur(2px)}
+.modalcard{border-radius:12px;box-shadow:var(--shadow-lg);padding:22px}
+#toast{background:var(--toast-bg);color:var(--toast-ink);border-radius:10px;box-shadow:var(--shadow-lg);font-weight:500}
+
+/* ── 로그인 게이트 ── */
+#loginGate{background:linear-gradient(180deg,var(--chrome) 0 38%,var(--page) 38%)}
+.gatecard{border-radius:14px;box-shadow:var(--shadow-lg);border-color:var(--border)}
+.gatecard h1{font-weight:700}
+.gatecard h1 b{color:var(--accent)}
+.gbtn{border-color:var(--border-strong);border-radius:8px;min-height:44px;font-weight:600}
+.gbtn:hover{background:var(--surface-2)}
+
+.foot{color:var(--muted);border-top-color:var(--border)}
+
+/* ── 좁은 화면: 크롬이 화면을 덮지 않게 ── */
+@media (max-width:720px){
+  .topbar{position:static;gap:8px 10px;padding:10px 2px 6px}
+  .brand{width:100%;align-items:center}
+  .brand .logo{white-space:nowrap;font-size:17px}
+  .brand .tag{display:none}
+  .tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{white-space:nowrap;flex:none}
+  .tabs .spacer{flex:0 0 8px}
+  .card{padding:16px 14px}
+}
 </style>
 </head>
 <body>
@@ -270,8 +386,8 @@ td.cellslot:hover .cellspark{opacity:1}
     <button class="chip dot" id="chipMount" title="마운트 세션 — 스테이지 재장착 경계를 표시합니다">마운트 없음</button>
     <span class="chip dot" id="chipSync">연결 대기</span>
     <span class="chip" id="chipUser">—</span>
-    <button class="iconbtn" id="btnTheme" title="라이트/다크 전환">◐</button>
-    <button class="iconbtn" id="btnLogout" title="로그아웃">⎋</button>
+    <button class="iconbtn" id="btnTheme" title="라이트/다크 전환" aria-label="라이트/다크 전환">◐</button>
+    <button class="iconbtn" id="btnLogout" title="로그아웃" aria-label="로그아웃">⎋</button>
   </div>
 
   <div class="tabs">
@@ -390,7 +506,7 @@ td.cellslot:hover .cellspark{opacity:1}
       <button class="btn danger sm" id="btnLogout2">로그아웃</button>
     </div>
     <div class="card">
-      <h3>동기화</h3>
+      <h3>동기화</h3><button class="btn sm" id="btnWorkspaceIndex" disabled>Workspace 연결 색인 내보내기</button><p class="hint">로드된 Run의 식별자와 파일 참조만 내보냅니다. 원본·첨부·계정 정보는 제외합니다.</p>
       <div class="hint" style="margin:8px 0" id="settSync">—</div>
       <div class="hint">저장 프로젝트: <span class="mono">inno-nanoil</span> (NanoLab과 공유). 컬렉션: <span class="mono">opt_presets · opt_cells · opt_templates · opt_runs · opt_calib · opt_mounts · opt_blob</span></div>
     </div>
@@ -1412,6 +1528,7 @@ const Sync = (() => {
       const runs = {};
       snap.docs.forEach(d => { runs[d.id] = Object.assign({ id: d.id }, d.data()); });
       state.runs = runs;
+      $("#btnWorkspaceIndex").disabled=false;
       renderCapacityGauge();
       renderDashboard();
     }, err => { console.error(err); toast("Run 읽기 오류: " + friendly(err), 4000); }));
@@ -1647,7 +1764,15 @@ const Sync = (() => {
     return { cellsCreated, runsCreated };
   }
 
+function innoWorkspaceIndex(state) {
+ const rows=Object.values(state.runs||{});if(rows.length>10000)throw Error('Run 10000개를 초과했습니다.');
+ const string=v=>{if(typeof v!=='string')return '';if(v.length>2000)throw Error('필드가 너무 깁니다. 자동으로 자르지 않습니다.');return v;};
+ return {format:'inno-ledger-index-v1',exportedAt:new Date().toISOString(),runs:rows.map(r=>({id:string(r.id),lotId:string(r.lotId),cellId:string(r.cellId),specimen:string(r.specimen),mountId:string(r.mountId),calibId:string(r.calibId),calibStatus:string(r.calibStatus),issuedAt:Number.isFinite(r.issuedAt)?r.issuedAt:null,file:{name:string(r.file?.name),relPath:string(r.file?.relPath),bytes:Number.isFinite(r.file?.bytes)?r.file.bytes:null,mtime:Number.isFinite(r.file?.mtime)?r.file.mtime:null}}))};
+}
+
   async function onLoggedIn() {
+    $("#btnWorkspaceIndex").disabled=true;
+    $("#btnWorkspaceIndex").onclick=()=>{try{const data=innoWorkspaceIndex(state);const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}));const a=document.createElement("a");a.href=url;a.download="INNO_Ledger_workspace.json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast(data.runs.length+"개 Run 색인을 내보냈습니다. 원본은 포함하지 않습니다.");}catch(e){toast(e.message);}};
     $("#loginGate").classList.add("hidden");
     $("#app").classList.add("on");
     $("#chipUser").textContent = state.fb.user.email || state.fb.user.displayName || "로그인됨";
